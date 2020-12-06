@@ -1,14 +1,27 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose')
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var recipeRouter = require('./routes/recipes');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/user/userRoute');
+// const recipeRouter = require('./routes/recipes/recipeRoute');
 
-var app = express();
+const app = express();
+
+
+mongoose
+  .connect('mongodb://localhost/recipe-app-final-term-2', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  })
+  .then(() => console.log('MongoDB Connected'))
+  .catch((err) => console.log(`MongoDB Error: ${err}`));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/recipes', recipeRouter);
+// app.use('/recipes', recipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
