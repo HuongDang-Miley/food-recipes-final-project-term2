@@ -8,7 +8,7 @@ const cors = require('cors')
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user/userRoute');
-// const recipeRouter = require('./routes/recipes/recipeRoute');
+const recipeRouter = require('./routes/recipes/recipeRouter');
 
 const app = express();
 
@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api/recipes', recipeRouter);
 app.use('/api/users', usersRouter);
 // app.use('/recipes', recipeRouter);
 

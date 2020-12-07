@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
         trim: true,
         require: true,
     },
-    recipe: [{
+    favMeals: [{
         type: mongoose.Schema.ObjectId, ref: "Recipe"
     }]
 
