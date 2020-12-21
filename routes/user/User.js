@@ -13,7 +13,8 @@ const UserSchema = new mongoose.Schema({
         require: true,
     },
     favMeals: [{
-        type: mongoose.Schema.ObjectId, ref: "Recipe"
+        type: mongoose.Schema.ObjectId, 
+        ref: "Recipe"
     }]
 
 })

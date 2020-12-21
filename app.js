@@ -9,6 +9,7 @@ const cors = require('cors')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user/userRoute');
 const recipeRouter = require('./routes/recipes/recipeRouter');
+const commentRouter = require('./routes/comment/commentRouter');
 
 const app = express();
 
@@ -18,7 +19,8 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false, 
+    autoIndex: false
   })
   .then(() => console.log('MongoDB Connected'))
   .catch((err) => console.log(`MongoDB Error: ${err}`));
@@ -38,6 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/recipes', recipeRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/comments', commentRouter);
 // app.use('/recipes', recipeRouter);
 
 // catch 404 and forward to error handler

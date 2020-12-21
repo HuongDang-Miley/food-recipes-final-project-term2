@@ -11,10 +11,10 @@ router.post('/like-recipe', async (req, res, next) => {
         // find if meal already Exist
         let foundMeal = await RecipeSchema.findOne({ idMeal: req.body.idMeal })
         if (foundMeal) {
-            console.log('duplicate meal')
+            
             res.status(400).json({ message: 'This Meal Already Exist', meal: foundMeal })
         } else {
-            console.log('before get data')
+            
             let newMeal = await new RecipeSchema({
                 idMeal: req.body.idMeal,
                 like: req.body.like,
@@ -65,15 +65,15 @@ router.post('/like-recipe', async (req, res, next) => {
                 strSource: req.body.strSource,
                 dateModified: req.body.dateModified,
             })
-            console.log('after get data', newMeal)
+            
             await newMeal.save()
-            console.log('after save newMeal', newMeal)
+            
             let foundUser = await UserSchema.findById(req.body._id)
-            console.log('foundUser', foundUser)
+            
             foundUser.favMeals.push(newMeal)
             await foundUser.save()
 
-            res.status(200).json({ message: 'new meal is added', meal: newMeal, user: foundUser })
+            res.status(200).json({ message: 'new meal is added', meal: newMeal, user: foundUser }).send('newMeal added')
         }
 
     }
@@ -96,7 +96,7 @@ router.delete('/delete-recipe', async (req, res, next) => {
         await foundUser.save()
         // delete meal from recipe database
         await RecipeSchema.findByIdAndDelete(meal_id)
-        console.log('newFavMeals', newFavMeals)
+        
         res.status(200).json({
             message: 'found meal and user',
             user: foundUser
@@ -109,5 +109,35 @@ router.delete('/delete-recipe', async (req, res, next) => {
     }
 })
 
+
+// get all fav recipes
+// find id in param
+router.get('/all-user-fav-meals/:id', async (req, res) => {
+    try { 
+        let allUserFavMeals = await User
+        .findById(req.params.id)
+        .populate( 'favMeals')
+        res.status(200).json({message: 'Get User Fav Meals Ud Successfully', allUserFavMeals})
+    }
+    catch (e) {
+        console.log(e)
+        res.status(500).json({ message: 'Server Error', error: e })
+    }
+})
+
+// //find id in body
+// router.get('/all-user-fav-meals', async (req, res) => {
+//     try { 
+//         let allUserFavMeals = await User
+//         .findById(req.body._id)
+//         // .populate( "Recipe", 'favMeals')
+//         .populate( 'favMeals')
+//         res.status(200).json({message: 'Get User Fav Meals Ud Successfully', allUserFavMeals})
+//     }
+//     catch (e) {
+//         console.log(e)
+//         res.status(500).json({ message: 'Server Error', error: e })
+//     }
+// })
 
 module.exports = router
